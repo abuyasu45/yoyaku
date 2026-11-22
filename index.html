@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>席予約</title>
+<style>
+  html,body{margin:0;height:100%;background:#fffaf3}
+  @media (prefers-color-scheme: dark){html,body{background:#1d1812}}
+  iframe{position:fixed;inset:0;width:100%;height:100%;border:0}
+  #msg{font-family:-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;padding:32px 20px;text-align:center;line-height:1.7;color:#7a6a5b}
+</style>
+</head>
+<body>
+<div id="msg" hidden></div>
+<script>
+// ★ お店ごとに、ここだけ書き換えてください(Apps Script の「ウェブアプリのURL」。…/exec で終わるもの)
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbyWp4efk0e7DHJ6A17UqJ_h_bCAxZDBa4P6mrxZCzJUjHQZTbMCLQIQV9btvnhkd-iC/exec';
+
+(function () {
+  var q = new URLSearchParams(location.search);
+  var page = q.get('page'), t = q.get('t');
+  var msg = document.getElementById('msg');
+  function show(text) { msg.hidden = false; msg.textContent = text; }
+  if (GAS_URL.indexOf('ここを書き換え') >= 0) { show('設定が完了していません(index.html の GAS_URL を設定してください)。'); return; }
+  if (['reserve', 'mine', 'admin'].indexOf(page) < 0 || !t || !/^[A-Za-z0-9._%\-]+$/.test(t)) {
+    show('LINEのメニューから「予約」を押してください。'); return;
+  }
+  var f = document.createElement('iframe');
+  f.src = GAS_URL + '?page=' + encodeURIComponent(page) + '&t=' + t;
+  f.title = '席予約';
+  document.body.appendChild(f);
+})();
+</script>
+</body>
+</html>
